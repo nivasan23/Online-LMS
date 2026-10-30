@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>EduLearn LMS</title>
+    <link rel="icon" href="img/LMS Learn.png" />
+  <style>
+
+:root {
+  --bg:#ffffff;
+  --ink:#000000;
+  --card:#6cb574;
+  --line:color-mix(in srgb,#000000 20%, #ffffff);
+  --mut:color-mix(in srgb,#000000 70%,#000000);
+  --on:#ffffff;
+  --bad:#ffffff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px)
+}
+@media (prefers-color-scheme:dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#f6ffbf;
+    --ink:#000000;
+    --card:#96dc6e;
+    --line:color-mix(in srgb,#000000 20%, #606060);
+    --mut:color-mix(in srgb,#000000 70%,#000000);
+    --on: #ffffff;
+    --bad: #ff2600
+  }}
+  * {
+    box-sizing:border-box
+  }
+  html {
+    scroll-padding-top:env(safe-area-inset-top,0px)
+  }
+  body {
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif
+  }
+  h1,h2,h3 {
+    font-family:Georgia,"Times New Roman",serif;
+    line-height:1.15;
+    margin:0 0 .5em
+  }
+  h1 {
+    font-size:clamp(2rem,6vw,3.6rem)
+  }
+  h2 {
+    font-size:1.6rem
+  }
+  h3 {
+    font-size:1.15rem
+  }
+  a {
+    color:inherit
+  }
+  button,input,select,textarea {
+    font:inherit;
+    color:inherit
+  }
+  :focus-visible {
+    outline:3px solid var(--ink);
+    outline-offset:2px
+  }
+  .btn {
+    background:var(--ink);
+    color:var(--on);
+    border:2px solid var(--ink);
+    padding:.6em 1.1em;
+    border-radius:8px;
+    cursor:pointer;
+    min-height:44px;
+    font-weight:600;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:.4em
+  }
+  .btn.o {
+    background:transparent;
+    color:var(--ink)
+  }
+  .btn.s {
+    min-height:36px;
+    padding:.3em .8em;
+    font-size:.9rem
+  }
+  input,select,textarea {
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:8px;
+    padding:.6em;
+    width:100%;
+    min-height:44px
+  }
+  label {
+    display:block;
+    font-weight:600;
+    margin:.8em 0 .25em
+  }
+  .top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    padding:.8rem 1.2rem;
+    border-bottom:2px solid var(--ink);
+    position:sticky;
+    top:0;
+    background:var(--bg);
+    z-index:5
+  }
+  .logo {
+    font:700 1.4rem Georgia,serif;
+    text-decoration:none
+  }
+  .nav {
+    display:flex;
+    gap:.5rem;
+    align-items:center;
+    flex-wrap:wrap
+  }
+  .wrap {
+    max-width:1100px;
+    margin:0 auto;
+    padding:1.2rem
+  }
+  .shell {
+    display:grid;
+    grid-template-columns:220px 1fr;
+    min-height:calc(100vh - 64px)
+  }
+  .side {
+    border-right:2px solid var(--ink);
+    padding:1rem;
+    display:flex;
+    flex-direction:column;
+    gap:.2rem
+  }
+  .side a {
+    padding:.55em .8em;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:500
+  }
+  .side a.on,.side a:hover {
+    background:var(--ink);
+    color:var(--on)
+  }
+  .menu {
+    display:none
+  }
+  @media(max-width:760px) {
+    .shell {
+      grid-template-columns:1fr
+    }
+    .side {
+      display:none;
+      border-right:0;
+      border-bottom:2px solid var(--ink)
+    }
+    .side.open {
+      display:flex
+    }
+    .menu {
+      display:inline-flex
+    }
+  }
+  .grid {
+    display:grid;
+    gap:1rem;
+    grid-template-columns:repeat(auto-fill,minmax(240px,1fr))
+  }
+  .card {
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:12px;
+    padding:1rem
+  }
+  .stat b {
+    display:block;
+    font:700 2rem Georgia,serif
+  }
+  .mut {
+    color:var(--mut)
+  }
+  .sm {
+    font-size:.88rem
+  }
+  .bar {
+    height:12px;
+    border-radius:6px;
+    background:var(--line);
+    overflow:hidden
+  }
+  .bar i {
+    display:block;
+    height:100%;
+    background:var(--ink)
+  }
+  .tag {
+    display:inline-block;
+    border:1.5px solid var(--ink);
+    border-radius:20px;
+    padding:0 .6em;
+    font-size:.8rem
+  }
+  .tbl {
+    overflow-x:auto
+  }
+  table {
+    width:100%;
+    border-collapse:collapse
+  }
+  th,td {
+    text-align:left;
+    padding:.55em .6em;
+    border-bottom:1px solid var(--line);
+    vertical-align:top
+  }
+  .hero {
+    padding:3rem 0 2rem;
+    max-width:760px
+  }
+  .row {
+    display:flex;
+    gap:.6rem;
+    flex-wrap:wrap;
+    align-items:center
+  }
+  .toast {
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:calc(1rem + env(safe-area-inset-bottom,0px));
+    background:var(--ink);
+    color:var(--on);
+    padding:.7em 1.2em;
+    border-radius:8px;
+    z-index:20
+  }
+  .bell {
+    position:relative
+  }
+  .bell em {
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    background:var(--bad);
+    color:#fff;
+    border-radius:10px;
+    font-size:.7rem;
+    padding:0 .4em;
+    font-style:normal
+  }
+  .dot {
+    display:inline-block;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--ink)
+  }
+  .dot.x {
+    background:var(--bad)
+  }
+  .opt {
+    display:block;
+    padding:.7em;
+    border:2px solid var(--line);
+    border-radius:8px;
+    margin:.4rem 0;
+    cursor:pointer;
+    font-weight:400
+  }
+  .opt:has(input:checked) {
+    border-color:var(--ink);
+    background:var(--line)
+  }
+  .opt input {
+    width:auto;
+    min-height:0;
+    margin-right:.5em
+  }
+  .cert {
+    border:6px double var(--ink);
+    padding:2rem;
+    text-align:center;
+    background:var(--card)
+  }
+  .player {
+    background:var(--ink);
+    color:var(--on);
+    border-radius:12px;
+    padding:1.2rem;
+    min-height:180px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    gap:.6rem
+  }
+  .player input[type=range] {
+    padding:0;
+    min-height:24px;
+    accent-color:var(--on)
+  }
+  .player select {
+    width:auto;
+    color:var(--ink)
+  }
+  .lesson {
+    display:flex;
+    justify-content:space-between;
+    gap:.5rem;
+    padding:.5em 0;
+    border-bottom:1px solid var(--line);
+    cursor:pointer
+  }
+  .sr {
+    position:absolute;
+    left:-9999px
+  }
+
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script>
+    "use strict";
+    /* ---------- Data layer (swap for REST /api/* calls in production) ---------- */
+    const KEY = "edulearn_v1";
+    let DB = null, ME = null, tm = null;
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const sha = async (s) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode("edu$" + s)))].map(b => b.toString(16).padStart(2, "0")).join("");
+    const save = () => { try {
+        localStorage.setItem(KEY, JSON.stringify(DB));
+    }
+    catch (e) { } };
+    const today = (d = 0) => new Date(Date.now() + d * 864e5).toISOString().slice(0, 10);
+    const toast = m => { const t = document.getElementById("toast"); t.textContent = m; t.hidden = false; clearTimeout(tm); tm = setTimeout(() => t.hidden = true, 2600); };
+    const log = m => { DB.logs.unshift({ at: new Date().toLocaleString(), who: ME ? ME.name : "system", m }); DB.logs = DB.logs.slice(0, 60); };
+    const note = (u, m) => DB.notes.unshift({ id: Date.now() + Math.random(), u, m, read: 0, at: new Date().toLocaleString() });
+    async function seed() {
+        const pw = await sha("demo123");
+        let id = 1;
+        const U = [];
+        U.push({ id: id++, name: "Ada Admin", email: "admin@edulearn.test", role: "ADMIN", pw, active: 1, dept: "Administration" });
+        ["Dr. Meera Rao|Computer Science", "Prof. Liam Ortiz|Data Science", "Sana Iqbal|Design"].forEach(x => { const [n, d] = x.split("|"); U.push({ id: id++, name: n, email: "teacher" + (U.length) + "@edulearn.test", role: "TEACHER", pw, active: 1, dept: d }); });
+        "Aarav Shah,Bela Kim,Chen Wu,Diya Nair,Eli Brown,Farah Khan,Gita Roy,Hugo Silva,Isha Patel,Jon Park".split(",").forEach((n, i) => U.push({ id: id++, name: n, email: "student" + (i + 1) + "@edulearn.test", role: "STUDENT", pw, active: 1, dept: ["Computer Science", "Data Science", "Design"][i % 3], sid: "STU-" + (1001 + i) }));
+        const C = [["Web Development", "Technology", "Beginner", 2, ["HTML,CSS,JavaScript"]], ["Python Programming", "Technology", "Beginner", 2, ["Basics,Functions,Data"]], ["Database Management", "Technology", "Intermediate", 3, ["SQL,Design,Indexing"]], ["UI/UX Design", "Design", "Beginner", 4, ["Research,Wireframes,Prototyping"]], ["Artificial Intelligence", "Science", "Advanced", 3, ["Search,Learning,Neural nets"]]];
+        let lid = 1;
+        const courses = C.map((c, i) => ({ id: i + 1, title: c[0], cat: c[1], level: c[2], teacher: c[3], status: "published", pub: 1, desc: "A practical, project-based course on " + c[0].toLowerCase() + " with videos, readings, assignments and a graded quiz.", prereq: i ? "None" : "Basic computer skills", modules: c[4][0].split(",").map(m => ({ t: m, lessons: [{ id: lid++, t: m + ": introduction", type: "video", dur: 600 }, { id: lid++, t: m + ": reading (PDF)", type: "pdf", dur: 300 }, { id: lid++, t: m + ": practice notes", type: "text", dur: 300 }] })) }));
+        const quizzes = courses.map(c => ({ id: c.id, c: c.id, t: c.title + " quiz", limit: 10, pass: 60, tries: 2, qs: [{ q: "What is the main goal of " + c.title + "?", o: ["Solve problems systematically", "Avoid planning", "Memorise only", "None of these"], a: 0, topic: "Concepts" }, { q: "Practice improves understanding.", o: ["True", "False"], a: 0, topic: "Practice" }, { q: "Which habit helps most when learning?", o: ["Skipping labs", "Building small projects", "Ignoring feedback"], a: 1, topic: "Method" }] }));
+        const assigns = courses.map(c => ({ id: c.id, c: c.id, t: c.title + ": mini project", due: today(7 + c.id), max: 100, ins: "Submit a short write-up of your project (200+ characters)." }));
+        const enr = [], P = {}, subs = [], att = [], attempts = [], certs = [];
+        U.filter(u => u.role == "STUDENT").forEach((s, i) => courses.forEach(c => {
+            if ((s.id + c.id) % 3 == 0)
+                return;
+            enr.push({ u: s.id, c: c.id });
+            const ls = c.modules.flatMap(m => m.lessons);
+            const n = (s.id * c.id + i) % (ls.length + 1);
+            ls.slice(0, n).forEach(l => P[s.id + ":" + l.id] = { pos: l.dur, done: 1 });
+            if (n > 3)
+                subs.push({ a: c.id, u: s.id, text: "Completed project write-up with all requested sections included for review.", at: today(-2), grade: 60 + (s.id * 7 + c.id * 3) % 40, fb: "Good work, clear structure.", late: 0 });
+            if (n > 2)
+                attempts.push({ q: c.id, u: s.id, pct: [33, 67, 100][(s.id + c.id) % 3], at: today(-3) });
+            [0, 1, 2, 3, 4, 5, 6, 7].forEach(d => att.push({ c: c.id, d: today(-d * 3), u: s.id, s: (s.id + d + c.id) % 9 == 0 ? "A" : (s.id + d) % 7 == 0 ? "L" : "P" }));
+        }));
+        DB = { users: U, courses, quizzes, assigns, enr, P, subs, att, attempts, certs, notes: [], ann: [{ id: 1, t: "Welcome to EduLearn", m: "Term starts now. Check your course schedule and deadlines.", at: today() }], logs: [], reviews: [{ c: 1, u: 11, r: 5, t: "Clear and practical." }, { c: 2, u: 12, r: 4, t: "Great pace." }], cfg: { name: "EduLearn LMS", open: 1 }, nid: 200 };
+        U.filter(u => u.role == "STUDENT").slice(0, 3).forEach(s => note(s.id, "Welcome! Your courses are ready."));
+        log("Database seeded");
+        save();
+    }
+    async function init() { try {
+        DB = JSON.parse(localStorage.getItem(KEY));
+    }
+    catch (e) { } if (!DB)
+        await seed(); try {
+        const s = sessionStorage.getItem("me");
+        if (s)
+            ME = DB.users.find(u => u.id == s && u.active) || null;
+    }
+    catch (e) { } render(); }
+    /* ---------- Helpers ---------- */
+    const U = id => DB.users.find(u => u.id == id) || { name: "?" }, C = id => DB.courses.find(c => c.id == id);
+    const lessons = c => c.modules.flatMap(m => m.lessons);
+    const done = (u, l) => DB.P[u + ":" + l] && DB.P[u + ":" + l].done;
+    const pct = (u, c) => { const l = lessons(c); return l.length ? Math.round(l.filter(x => done(u, x.id)).length / l.length * 100) : 0; };
+    const bar = p => `<div class="bar" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><i style="width:${p}%"></i></div>`;
+    const rating = c => { const r = DB.reviews.filter(x => x.c == c); return r.length ? (r.reduce((a, b) => a + b.r, 0) / r.length).toFixed(1) + " ★" : "No ratings"; };
+    const myC = u => DB.enr.filter(e => e.u == u).map(e => C(e.c)).filter(Boolean);
+    const tC = u => DB.courses.filter(c => c.teacher == u);
+    const dur = c => Math.round(lessons(c).reduce((a, l) => a + l.dur, 0) / 60) + " min";
+    const stat = (n, l) => `<div class="card stat"><b>${n}</b><span class="mut">${l}</span></div>`;
+    const empty = m => `<div class="card mut">${m}</div>`;
+    const avgQ = () => DB.attempts.length ? Math.round(DB.attempts.reduce((a, b) => a + b.pct, 0) / DB.attempts.length) : 0;
+    const attPct = (u, c) => { const r = DB.att.filter(a => a.u == u && (!c || a.c == c)); return r.length ? Math.round(r.filter(a => a.s != "A").length / r.length * 1000) / 10 : 0; };
+    function checkCert(u, c) { if (pct(u, c) < 100 || DB.certs.some(x => x.u == u && x.c == c.id))
+        return; const id = "EDU-2026-" + String(++DB.nid).padStart(6, "0"); DB.certs.push({ id, u, c: c.id, date: today() }); note(u, "Certificate generated for " + c.title); log("Certificate " + id); toast("Certificate earned!"); }
+    function download(name, rows) { const t = rows.map(r => r.map(x => '"' + String(x).replace(/"/g, '""') + '"').join(",")).join("\n"); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([t], { type: "text/csv" })); a.download = name; a.click(); }
+    const qr = s => { let h = 0, o = ""; for (let i = 0; i < s.length; i++)
+        h = (h * 31 + s.charCodeAt(i)) >>> 0; for (let y = 0; y < 9; y++)
+        for (let x = 0; x < 9; x++) {
+            h = (h * 1103515245 + 12345) >>> 0;
+            if (h >>> 16 & 1 || (x < 2 && y < 2))
+                o += `<rect x="${x * 8}" y="${y * 8}" width="8" height="8"/>`;
+        } return `<svg viewBox="0 0 72 72" width="96" height="96" fill="currentColor" role="img" aria-label="QR code for ${esc(s)}">${o}</svg>`; };
+    /* ---------- Auth ---------- */
+    async function login(e) {
+        e.preventDefault();
+        const f = e.target, em = f.email.value.trim().toLowerCase(), h = await sha(f.pw.value);
+        const u = DB.users.find(x => x.email == em && x.pw == h);
+        if (!u || !u.active) {
+            document.getElementById("err").textContent = u ? "This account is deactivated." : "Email or password is incorrect.";
+            return;
+        }
+        ME = u;
+        try {
+            sessionStorage.setItem("me", u.id);
+        }
+        catch (e) { }
+        log("Login");
+        save();
+        location.hash = "#/dash";
+    }
+    async function register(e) {
+        e.preventDefault();
+        const f = e.target, em = f.email.value.trim().toLowerCase(), er = document.getElementById("err");
+        if (f.pw.value.length < 8) {
+            er.textContent = "Password needs at least 8 characters.";
+            return;
+        }
+        if (DB.users.some(u => u.email == em)) {
+            er.textContent = "That email is already registered.";
+            return;
+        }
+        const n = DB.users.length + 1;
+        DB.users.push({ id: Math.max(...DB.users.map(u => u.id)) + 1, name: f.name.value.trim(), email: em, role: f.role.value, pw: await sha(f.pw.value), active: 1, dept: f.dept.value, sid: "STU-" + (1000 + n) });
+        log("Registered " + em);
+        save();
+        toast("Account created. Please sign in.");
+        location.hash = "#/login";
+    }
+    const logout = () => { ME = null; try {
+        sessionStorage.removeItem("me");
+    }
+    catch (e) { } location.hash = "#/"; };
+    const quick = r => { const u = DB.users.find(x => x.role == r); const f = document.forms[0]; f.email.value = u.email; f.pw.value = "demo123"; };
+    /* ---------- Actions ---------- */
+    const enroll = c => { if (!ME)
+        return location.hash = "#/login"; if (!DB.enr.some(e => e.u == ME.id && e.c == c)) {
+        DB.enr.push({ u: ME.id, c });
+        note(ME.id, "Enrolled in " + C(c).title);
+        log("Enrolled " + C(c).title);
+        save();
+        toast("Enrolled");
+    } location.hash = "#/learn/" + c; };
+    const complete = (c, l) => { DB.P[ME.id + ":" + l] = { pos: 999, done: 1 }; checkCert(ME.id, C(c)); save(); render(); };
+    function submit(e, a) {
+        e.preventDefault();
+        const t = e.target.text.value.trim(), A = DB.assigns.find(x => x.id == a);
+        if (t.length < 20) {
+            document.getElementById("err").textContent = "Write at least 20 characters.";
+            return;
+        }
+        const late = today() > A.due ? 1 : 0, old = DB.subs.find(s => s.a == a && s.u == ME.id);
+        if (old && old.grade != null) {
+            toast("Already graded");
+            return;
+        }
+        if (old) {
+            old.text = t;
+            old.at = today();
+            old.late = late;
+        }
+        else
+            DB.subs.push({ a, u: ME.id, text: t, at: today(), grade: null, fb: "", late });
+        note(C(A.c).teacher, ME.name + " submitted " + A.t);
+        save();
+        toast(late ? "Submitted (late)" : "Submitted");
+        render();
+    }
+    function grade(e, a, u) { e.preventDefault(); const s = DB.subs.find(x => x.a == a && x.u == u), g = +e.target.g.value; if (isNaN(g) || g < 0 || g > 100)
+        return toast("Grade must be 0-100"); s.grade = g; s.fb = e.target.fb.value; note(u, "Your assignment was graded: " + g + "/100"); log("Graded"); save(); toast("Graded"); render(); }
+    function mark(c, d, u, s) { const r = DB.att.find(a => a.c == c && a.d == d && a.u == u); r ? r.s = s : DB.att.push({ c, d, u, s }); save(); }
+    function newCourse(e) {
+        e.preventDefault();
+        const f = e.target, id = Math.max(...DB.courses.map(c => c.id)) + 1, l = DB.nid += 10;
+        DB.courses.push({ id, title: f.title.value.trim(), cat: f.cat.value, level: f.level.value, teacher: ME.id, status: "pending", pub: 0, desc: f.desc.value, prereq: f.pre.value || "None", modules: [{ t: "Module 1", lessons: [{ id: l, t: "Welcome", type: "text", dur: 300 }, { id: l + 1, t: "First video", type: "video", dur: 600 }] }] });
+        DB.quizzes.push({ id, c: id, t: f.title.value + " quiz", limit: 10, pass: 60, tries: 2, qs: [] });
+        DB.assigns.push({ id, c: id, t: "Assignment 1", due: today(14), max: 100, ins: "Describe what you learned." });
+        log("Course created");
+        note(1, "Course awaiting approval: " + f.title.value);
+        save();
+        toast("Course submitted for approval");
+        render();
+    }
+    function addQ(e, c) { e.preventDefault(); const f = e.target, o = f.o.value.split("|").map(x => x.trim()).filter(Boolean), a = +f.a.value - 1; if (o.length < 2 || a < 0 || a >= o.length)
+        return toast("Need 2+ options and a valid answer number"); DB.quizzes.find(q => q.c == c).qs.push({ q: f.q.value, o, a, topic: f.t.value || "General" }); save(); toast("Question added"); render(); }
+    /* ---------- Quiz & video ---------- */
+    let Q = null, V = null;
+    function startQuiz(id) {
+        const q = DB.quizzes.find(x => x.id == id), n = DB.attempts.filter(a => a.q == id && a.u == ME.id).length;
+        if (!q.qs.length)
+            return toast("This quiz has no questions yet");
+        if (n >= q.tries)
+            return toast("No attempts left");
+        Q = { id, i: 0, ans: [], left: q.limit * 60, order: q.qs.map((_, i) => i).sort(() => Math.random() - .5) };
+        clearInterval(Q.t);
+        Q.t = setInterval(() => { if (--Q.left <= 0)
+            finishQuiz();
+        else {
+            const e = document.getElementById("qt");
+            if (e)
+                e.textContent = fmt(Q.left);
+        } }, 1e3);
+        render();
+    }
+    const fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    function finishQuiz() {
+        clearInterval(Q.t);
+        const q = DB.quizzes.find(x => x.id == Q.id);
+        let ok = 0;
+        const topics = {};
+        Q.order.forEach((qi, k) => { const r = Q.ans[k] === q.qs[qi].a; if (r)
+            ok++; const t = q.qs[qi].topic; topics[t] = topics[t] || [0, 0]; topics[t][1]++; if (r)
+            topics[t][0]++; });
+        const p = Math.round(ok / q.qs.length * 100);
+        DB.attempts.push({ q: q.id, u: ME.id, pct: p, at: today() });
+        note(ME.id, "Quiz result: " + p + "% (" + (p >= q.pass ? "passed" : "failed") + ")");
+        save();
+        Q = { res: { ok, n: q.qs.length, p, topics, pass: p >= q.pass, id: q.id } };
+        render();
+    }
+    function playV(l, d, start) {
+        clearInterval(V);
+        let pos = start, sp = 1, playing = false;
+        const upd = () => { const r = document.getElementById("seek"); if (!r)
+            return clearInterval(V); r.value = pos; document.getElementById("pt").textContent = fmt(Math.floor(pos)) + " / " + fmt(d); };
+        window.vt = () => { playing = !playing; clearInterval(V); document.getElementById("pp").textContent = playing ? "Pause" : "Play"; if (playing)
+            V = setInterval(() => { pos = Math.min(d, pos + sp); DB.P[ME.id + ":" + l] = { pos, done: DB.P[ME.id + ":" + l]?.done || 0 }; if (pos / d >= .9 && !done(ME.id, l)) {
+                DB.P[ME.id + ":" + l].done = 1;
+                checkCert(ME.id, C(window.cid));
+                toast("Lesson completed");
+                save();
+            } upd(); }, 1e3); save(); };
+        window.vs = v => { pos = +v; DB.P[ME.id + ":" + l] = { pos, done: done(ME.id, l) ? 1 : 0 }; upd(); };
+        window.vp = v => sp = +v;
+        upd();
+    }
+    /* ---------- Views ---------- */
+    const courseCard = c => `<article class="card"><span class="tag">${esc(c.cat)}</span> <span class="tag">${esc(c.level)}</span><h3 style="margin-top:.6rem">${esc(c.title)}</h3><p class="mut sm">${esc(c.desc)}</p><p class="sm">${esc(U(c.teacher).name)} · ${dur(c)} · ${rating(c.id)}</p><a class="btn s" href="#/course/${c.id}">View course</a></article>`;
+    function catalog(q, cat, lv) {
+        const L = DB.courses.filter(c => c.pub && c.status == "published" && (!q || (c.title + c.desc + U(c.teacher).name + lessons(c).map(l => l.t).join()).toLowerCase().includes(q.toLowerCase())) && (!cat || c.cat == cat) && (!lv || c.level == lv));
+        return `<form class="row" onsubmit="event.preventDefault();location.hash='#/${ME ? "browse" : "courses"}/'+encodeURIComponent(this.q.value)+'/'+this.cat.value+'/'+this.lv.value"><label class="sr" for="q">Search</label><input id="q" name="q" placeholder="Search courses, lessons, teachers" value="${esc(q)}" style="flex:2;min-width:180px"><select name="cat" aria-label="Category"><option value="">All categories</option>${["Technology", "Design", "Science"].map(x => `<option ${cat == x ? "selected" : ""}>${x}</option>`).join("")}</select><select name="lv" aria-label="Difficulty"><option value="">Any level</option>${["Beginner", "Intermediate", "Advanced"].map(x => `<option ${lv == x ? "selected" : ""}>${x}</option>`).join("")}</select><button class="btn">Search</button></form><div class="grid" style="margin-top:1rem">${L.map(courseCard).join("") || empty("No courses match. Try a different search.")}</div>`;
+    }
+    function courseDetail(id) {
+        const c = C(id);
+        if (!c)
+            return empty("Course not found.");
+        const en = ME && DB.enr.some(e => e.u == ME.id && e.c == c.id);
+        return `<h1>${esc(c.title)}</h1><p>${esc(c.desc)}</p><p class="mut">Teacher: ${esc(U(c.teacher).name)} · ${esc(c.level)} · ${dur(c)} · ${rating(c.id)} · Prerequisites: ${esc(c.prereq)}</p>
+     <p>${en ? `<a class="btn" href="#/learn/${c.id}">Continue learning</a>` : (ME && ME.role != "STUDENT" ? "" : `<button class="btn" onclick="enroll(${c.id})">Enroll now</button>`)}</p>
+     ${c.modules.map(m => `<div class="card" style="margin:.6rem 0"><h3>${esc(m.t)}</h3>${m.lessons.map(l => `<div class="lesson"><span>${esc(l.t)}</span><span class="mut sm">${l.type} · ${Math.round(l.dur / 60)} min</span></div>`).join("")}</div>`).join("")}
+     <h3>Reviews</h3>${DB.reviews.filter(r => r.c == id).map(r => `<div class="card sm">${"★".repeat(r.r)} ${esc(r.t)} <span class="mut">— ${esc(U(r.u).name)}</span></div>`).join("") || empty("No reviews yet.")}
+     ${en ? `<form class="card" onsubmit="event.preventDefault();DB.reviews.push({c:${id},u:ME.id,r:+this.r.value,t:this.t.value});save();toast('Review posted');render()"><label for="r">Rate this course</label><select id="r" name="r">${[5, 4, 3, 2, 1].map(n => `<option>${n}</option>`).join("")}</select><label for="t">Your review</label><input id="t" name="t" required><p><button class="btn s">Post review</button></p></form>` : ""}`;
+    }
+    function learn(id, lid) {
+        const c = C(id);
+        if (!c || !DB.enr.some(e => e.u == ME.id && e.c == id))
+            return empty("Enroll first to open this course.");
+        window.cid = id;
+        const L = lessons(c), cur = L.find(l => l.id == lid) || L.find(l => !done(ME.id, l.id)) || L[0], p = pct(ME.id, c);
+        const body = cur.type == "video" ? `<div class="player"><b>${esc(cur.t)}</b><input id="seek" type="range" min="0" max="${cur.dur}" value="0" aria-label="Seek" oninput="vs(this.value)"><div class="row"><button id="pp" class="btn o s" style="background:var(--on);color:var(--ink)" onclick="vt()">Play</button><span id="pt" class="sm"></span><select aria-label="Playback speed" onchange="vp(this.value)"><option>1</option><option>1.5</option><option>2</option></select><span class="sm">speed (x) · resumes where you left off · auto-completes at 90%</span></div></div>` : `<div class="card"><h3>${esc(cur.t)}</h3><p>${cur.type == "pdf" ? "PDF reading material (stored in object storage; served by signed URL)." : "Text lesson content appears here."}</p>${done(ME.id, cur.id) ? '<span class="tag">Completed</span>' : `<button class="btn" onclick="complete(${id},${cur.id})">Mark complete</button>`}</div>`;
+        setTimeout(() => { if (cur.type == "video")
+            playV(cur.id, cur.dur, (DB.P[ME.id + ":" + cur.id] || {}).pos || 0); });
+        return `<h2>${esc(c.title)}</h2>${bar(p)}<p class="sm mut">${p}% complete · ${L.filter(l => done(ME.id, l.id)).length}/${L.length} lessons</p><div style="display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))"><div>${body}</div><div class="card">${c.modules.map(m => `<b>${esc(m.t)}</b>${m.lessons.map(l => `<a class="lesson" style="text-decoration:none" href="#/learn/${id}/${l.id}"><span>${l.id == cur.id ? "▶ " : ""}${esc(l.t)}</span><span>${done(ME.id, l.id) ? "✓" : ""}</span></a>`).join("")}`).join("")}${p == 100 ? '<p><a class="btn s" href="#/certs">View certificate</a></p>' : ""}</div></div>`;
+    }
+    function quizPage(id) {
+        const q = DB.quizzes.find(x => x.id == id);
+        if (Q && Q.res) {
+            const r = Q.res;
+            return `<div class="card"><h2>Quiz result</h2><p>Score: ${r.ok}/${r.n} · Percentage: ${r.p}% · Correct: ${r.ok} · Incorrect: ${r.n - r.ok}</p><h3>${r.pass ? "PASSED" : "FAILED"}</h3><p class="sm">Topic performance: ${Object.entries(r.topics).map(([t, v]) => esc(t) + " " + v[0] + "/" + v[1]).join(" · ")}</p><a class="btn" href="#/quizzes" onclick="Q=null">Back to quizzes</a></div>`;
+        }
+        if (!Q)
+            return empty("Choose a quiz from the list.");
+        const qi = Q.order[Q.i], qq = q.qs[qi];
+        return `<div class="row" style="justify-content:space-between"><h2>${esc(q.t)}</h2><b>Time left: <span id="qt">${fmt(Q.left)}</span></b></div>${bar(Math.round(Q.i / q.qs.length * 100))}<div class="card" style="margin-top:1rem"><p class="sm mut">Question ${Q.i + 1} of ${q.qs.length}</p><h3>${esc(qq.q)}</h3>${qq.o.map((o, i) => `<label class="opt"><input type="radio" name="o" ${Q.ans[Q.i] === i ? "checked" : ""} onchange="Q.ans[Q.i]=${i}">${esc(o)}</label>`).join("")}<div class="row"><button class="btn o" ${Q.i ? "" : "disabled"} onclick="Q.i--;render()">Previous</button>${Q.i < q.qs.length - 1 ? '<button class="btn" onclick="Q.i++;render()">Next</button>' : '<button class="btn" onclick="finishQuiz()">Submit quiz</button>'}</div></div>`;
+    }
+    function dash() {
+        const r = ME.role;
+        if (r == "STUDENT") {
+            const cs = myC(ME.id), n = DB.notes.filter(x => x.u == ME.id).slice(0, 4), g = DB.subs.filter(s => s.u == ME.id && s.grade != null);
+            const next = cs.find(c => pct(ME.id, c) < 100);
+            return `<h2>Welcome back, ${esc(ME.name.split(" ")[0])}</h2>${next ? `<div class="card"><b>Continue learning</b><h3>${esc(next.title)}</h3>${bar(pct(ME.id, next))}<p><a class="btn s" href="#/learn/${next.id}">Resume</a></p></div>` : ""}
+      <div class="grid" style="margin:1rem 0">${stat(cs.length, "Enrolled courses")}${stat(DB.certs.filter(c => c.u == ME.id).length, "Certificates")}${stat(attPct(ME.id) + "%", "Attendance")}${stat(g.length ? Math.round(g.reduce((a, b) => a + b.grade, 0) / g.length) : "–", "Average grade")}</div>
+      <h3>My progress</h3>${cs.map(c => `<div style="margin:.6rem 0"><div class="row" style="justify-content:space-between"><span>${esc(c.title)}</span><b>${pct(ME.id, c)}%</b></div>${bar(pct(ME.id, c))}</div>`).join("") || empty("You haven't enrolled yet. Browse courses to begin.")}
+      <h3>Upcoming deadlines</h3>${cs.map(c => DB.assigns.find(a => a.c == c.id)).filter(Boolean).map(a => `<div class="card sm" style="margin:.4rem 0">${esc(a.t)} — due ${a.due}</div>`).join("") || empty("Nothing due.")}
+      <h3>Notifications</h3>${n.map(x => `<div class="card sm" style="margin:.4rem 0">${esc(x.m)}</div>`).join("") || empty("No notifications.")}`;
+        }
+        if (r == "TEACHER") {
+            const cs = tC(ME.id), st = new Set(DB.enr.filter(e => cs.some(c => c.id == e.c)).map(e => e.u)), sb = DB.subs.filter(s => cs.some(c => c.id == s.a));
+            return `<h2>Teacher dashboard</h2><div class="grid">${stat(cs.length, "Courses")}${stat(st.size, "Enrolled students")}${stat(sb.filter(s => s.grade == null).length, "Pending to grade")}${stat(sb.length ? Math.round(sb.filter(s => s.grade != null).reduce((a, b) => a + b.grade, 0) / Math.max(1, sb.filter(s => s.grade != null).length)) : "–", "Average grade")}</div><h3 style="margin-top:1.2rem">My courses</h3><div class="grid">${cs.map(c => `<div class="card"><h3>${esc(c.title)}</h3><span class="tag">${c.status}</span><p class="sm mut">${DB.enr.filter(e => e.c == c.id).length} students</p></div>`).join("") || empty("No courses yet.")}</div>`;
+        }
+        const S = DB.users.filter(u => u.role == "STUDENT").length, done_ = DB.enr.filter(e => pct(e.u, C(e.c)) == 100).length, mx = Math.max(1, ...DB.courses.map(c => DB.enr.filter(e => e.c == c.id).length));
+        return `<h2>Admin dashboard</h2><div class="grid">${stat(S, "Students")}${stat(DB.users.filter(u => u.role == "TEACHER").length, "Teachers")}${stat(DB.courses.length, "Courses")}${stat(DB.courses.filter(c => c.status == "published").length, "Active courses")}${stat(done_, "Completed enrolments")}${stat(DB.assigns.length, "Assignments")}${stat(DB.quizzes.length, "Quizzes")}${stat(avgQ() + "%", "Avg quiz score")}${stat(Math.round(DB.att.filter(a => a.s != "A").length / DB.att.length * 100) + "%", "Attendance")}</div>
+     <h3 style="margin-top:1.2rem">Enrolments per course</h3>${DB.courses.map(c => { const n = DB.enr.filter(e => e.c == c.id).length; return `<div class="row" style="margin:.3rem 0"><span style="width:170px">${esc(c.title)}</span><div style="flex:1">${bar(n / mx * 100)}</div><b>${n}</b></div>`; }).join("")}
+     <h3>Recent activity</h3>${DB.logs.slice(0, 5).map(l => `<div class="card sm" style="margin:.3rem 0">${esc(l.at)} — ${esc(l.who)}: ${esc(l.m)}</div>`).join("")}`;
+    }
+    function page(p, a, b, c) {
+        const r = ME.role;
+        if (p == "dash")
+            return dash();
+        if (p == "profile")
+            return `<h2>Profile</h2><div class="card"><p><b>${esc(ME.name)}</b><br>${esc(ME.email)}<br>${esc(ME.role)} · ${esc(ME.dept || "")}${ME.sid ? "<br>Student ID: " + ME.sid : ""}</p></div>`;
+        if (p == "notifs") {
+            DB.notes.filter(n => n.u == ME.id).forEach(n => n.read = 1);
+            save();
+            return `<h2>Notifications</h2>${DB.notes.filter(n => n.u == ME.id).map(n => `<div class="card sm" style="margin:.4rem 0">${esc(n.m)} <span class="mut">· ${esc(n.at)}</span></div>`).join("") || empty("You're all caught up.")}<h3>Announcements</h3>${DB.ann.map(x => `<div class="card"><b>${esc(x.t)}</b><p>${esc(x.m)}</p></div>`).join("")}${r != "STUDENT" ? `<form class="card" onsubmit="event.preventDefault();DB.ann.unshift({id:Date.now(),t:this.t.value,m:this.m.value,at:today()});DB.users.filter(u=>u.role=='STUDENT').forEach(u=>note(u.id,'Announcement: '+this.t.value));save();toast('Announcement posted');render()"><label for="t">Title</label><input id="t" name="t" required><label for="m">Message</label><textarea id="m" name="m" required></textarea><p><button class="btn">Post announcement</button></p></form>` : ""}`;
+        }
+        if (r == "STUDENT") {
+            if (p == "browse")
+                return `<h2>Browse courses</h2>` + catalog(decodeURIComponent(a || ""), b, c);
+            if (p == "learn")
+                return learn(+a, +b);
+            if (p == "my")
+                return `<h2>My courses</h2><div class="grid">${myC(ME.id).map(c => `<div class="card"><h3>${esc(c.title)}</h3>${bar(pct(ME.id, c))}<p class="sm">${pct(ME.id, c)}%</p><a class="btn s" href="#/learn/${c.id}">Open</a></div>`).join("") || empty("No enrolled courses yet.")}</div>`;
+            if (p == "assign")
+                return `<h2>Assignments</h2>${myC(ME.id).map(c => {
+                    const A = DB.assigns.find(x => x.c == c.id);
+                    if (!A)
+                        return "";
+                    const s = DB.subs.find(x => x.a == A.id && x.u == ME.id), st = !s ? "Not Started" : s.grade != null ? "Graded" : s.late ? "Late" : "Submitted";
+                    return `<div class="card" style="margin:.6rem 0"><h3>${esc(A.t)}</h3><span class="tag">${st}</span> <span class="sm mut">Due ${A.due} · ${esc(c.title)}</span><p>${esc(A.ins)}</p>${s && s.grade != null ? `<p><b>${s.grade}/${A.max}</b> — ${esc(s.fb)}</p>` : `<form onsubmit="submit(event,${A.id})"><label for="a${A.id}">Your submission</label><textarea id="a${A.id}" name="text">${esc(s ? s.text : "")}</textarea><p id="err" class="sm" style="color:var(--bad)"></p><button class="btn s">${s ? "Replace submission" : "Submit"}</button></form>`}</div>`;
+                }).join("") || empty("No assignments.")}`;
+            if (p == "quizzes")
+                return `<h2>Quizzes</h2>${myC(ME.id).map(c => DB.quizzes.find(q => q.c == c.id)).filter(Boolean).map(q => { const at = DB.attempts.filter(a => a.q == q.id && a.u == ME.id); return `<div class="card" style="margin:.6rem 0"><h3>${esc(q.t)}</h3><p class="sm mut">${q.qs.length} questions · ${q.limit} min · pass ${q.pass}% · attempts ${at.length}/${q.tries}${at.length ? " · best " + Math.max(...at.map(a => a.pct)) + "%" : ""}</p><a class="btn s" href="#/quiz/${q.id}" onclick="startQuiz(${q.id})">Start quiz</a></div>`; }).join("") || empty("No quizzes.")}`;
+            if (p == "quiz")
+                return quizPage(+a);
+            if (p == "grades") {
+                const rows = DB.subs.filter(s => s.u == ME.id && s.grade != null);
+                return `<h2>Grades</h2><div class="tbl"><table><tr><th>Assignment</th><th>Grade</th><th>Feedback</th></tr>${rows.map(s => `<tr><td>${esc(DB.assigns.find(x => x.id == s.a).t)}</td><td>${s.grade}/100</td><td>${esc(s.fb)}</td></tr>`).join("")}</table></div>${rows.length ? "" : empty("No grades yet.")}<h3>Quiz scores</h3>${DB.attempts.filter(x => x.u == ME.id).map(x => `<div class="card sm" style="margin:.3rem 0">${esc(DB.quizzes.find(q => q.id == x.q).t)}: ${x.pct}%</div>`).join("") || empty("No attempts yet.")}`;
+            }
+            if (p == "attend") {
+                const r = DB.att.filter(x => x.u == ME.id), P = r.filter(x => x.s == "P").length, A = r.filter(x => x.s == "A").length, L = r.filter(x => x.s == "L").length;
+                return `<h2>Attendance</h2><div class="grid">${stat(r.length, "Total classes")}${stat(P, "Present")}${stat(A, "Absent")}${stat(L, "Late")}</div><h3>Attendance: ${attPct(ME.id)}%</h3>${bar(attPct(ME.id))}`;
+            }
+            if (p == "certs")
+                return `<h2>Certificates</h2>${DB.certs.filter(x => x.u == ME.id).map(x => `<div class="cert" style="margin:1rem 0"><p class="mut">Certificate of completion</p><h2>${esc(U(x.u).name)}</h2><p>completed <b>${esc(C(x.c).title)}</b></p><p>${esc(U(C(x.c).teacher).name)} · EduLearn · ${x.date}</p>${qr(x.id)}<p>Certificate ID: ${x.id}</p><a class="btn s" href="#/verify/${x.id}">Verify</a> <button class="btn s o" onclick="print()">Print</button></div>`).join("") || empty("Finish all lessons in a course to earn a certificate.")}`;
+            if (p == "calendar") {
+                const ev = [];
+                myC(ME.id).forEach(c => { const A = DB.assigns.find(a => a.c == c.id); if (A)
+                    ev.push([A.due, "Assignment due: " + A.t]); ev.push([today(3 + c.id), "Class: " + c.title]); ev.push([today(5 + c.id), "Quiz: " + c.title]); });
+                return `<h2>Schedule</h2>${ev.sort().map(e => `<div class="card sm" style="margin:.3rem 0"><b>${e[0]}</b> — ${esc(e[1])}</div>`).join("")}`;
+            }
+        }
+        if (r == "TEACHER") {
+            const cs = tC(ME.id);
+            if (p == "tcourses")
+                return `<h2>My courses</h2><div class="grid">${cs.map(c => `<div class="card"><h3>${esc(c.title)}</h3><span class="tag">${c.status}</span><p class="sm mut">${c.modules.length} modules · ${lessons(c).length} lessons</p><button class="btn s o" onclick="C(${c.id}).pub=1-C(${c.id}).pub;save();toast('Updated');render()">${c.pub ? "Unpublish" : "Publish"}</button> <button class="btn s o" onclick="if(confirm('Delete this course?')){DB.courses=DB.courses.filter(x=>x.id!=${c.id});save();render()}">Delete</button></div>`).join("") || empty("No courses yet.")}</div>
+       <h3 style="margin-top:1rem">Create a course</h3><form class="card" onsubmit="newCourse(event)"><label for="ti">Title</label><input id="ti" name="title" required minlength="3"><label for="ds">Description</label><textarea id="ds" name="desc" required></textarea><label for="ct">Category</label><select id="ct" name="cat"><option>Technology</option><option>Design</option><option>Science</option></select><label for="lv">Level</label><select id="lv" name="level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select><label for="pr">Prerequisites</label><input id="pr" name="pre"><p class="sm mut">Uploads (video, PDF, PPT, DOC, images) are validated by type and size on the API, then stored in object storage.</p><button class="btn">Submit for approval</button></form>`;
+            if (p == "tassign")
+                return `<h2>Submissions</h2>${cs.map(c => { const A = DB.assigns.find(x => x.c == c.id); if (!A)
+                    return ""; return `<h3>${esc(A.t)}</h3>${DB.subs.filter(s => s.a == A.id).map(s => `<div class="card" style="margin:.4rem 0"><b>${esc(U(s.u).name)}</b> ${s.late ? '<span class="tag">Late</span>' : ""} <span class="sm mut">${s.at}</span><p class="sm">${esc(s.text)}</p><form class="row" onsubmit="grade(event,${A.id},${s.u})"><input name="g" type="number" min="0" max="100" value="${s.grade ?? ""}" aria-label="Grade" style="width:90px" required><input name="fb" value="${esc(s.fb)}" aria-label="Feedback" placeholder="Feedback" style="flex:1"><button class="btn s">Save grade</button></form></div>`).join("") || empty("No submissions yet.")}`; }).join("")}`;
+            if (p == "tquiz")
+                return `<h2>Quiz builder</h2>${cs.map(c => { const q = DB.quizzes.find(x => x.c == c.id); return q ? `<div class="card" style="margin:.6rem 0"><h3>${esc(q.t)}</h3><p class="sm mut">${q.qs.length} questions · ${q.limit} min · pass ${q.pass}% · auto-graded</p><form onsubmit="addQ(event,${c.id})"><label for="q${c.id}">Question</label><input id="q${c.id}" name="q" required><label>Options separated by |</label><input name="o" placeholder="Option A | Option B | Option C" required><label>Correct option number</label><input name="a" type="number" min="1" max="6" required><label>Topic</label><input name="t"><p><button class="btn s">Add question</button></p></form></div>` : ""; }).join("") || empty("Create a course first.")}`;
+            if (p == "tprog") {
+                const rows = [];
+                cs.forEach(c => DB.enr.filter(e => e.c == c.id).forEach(e => rows.push([U(e.u).name, c.title, pct(e.u, c), attPct(e.u, c.id)])));
+                return `<h2>Student progress</h2><p><button class="btn s o" onclick='download("progress.csv",${esc(JSON.stringify([["Student", "Course", "Progress %", "Attendance %"], ...rows])).replace(/'/g, "&#39;")})'>Export CSV</button></p><div class="tbl"><table><tr><th>Student</th><th>Course</th><th>Progress</th><th>Attendance</th></tr>${rows.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td style="min-width:120px">${bar(r[2])}${r[2]}%</td><td>${r[3]}%</td></tr>`).join("")}</table></div>${rows.length ? "" : empty("No students enrolled.")}`;
+            }
+            if (p == "tatt") {
+                const cid = +a || (cs[0] || {}).id;
+                if (!cid)
+                    return empty("No courses.");
+                const d = today();
+                return `<h2>Attendance</h2><div class="row">${cs.map(c => `<a class="btn s ${c.id == cid ? "" : "o"}" href="#/tatt/${c.id}">${esc(c.title)}</a>`).join("")}</div><p class="mut">Class date: ${d}</p><div class="tbl"><table><tr><th>Student</th><th>Status</th><th>Overall</th></tr>${DB.enr.filter(e => e.c == cid).map(e => { const cur = (DB.att.find(x => x.c == cid && x.d == d && x.u == e.u) || {}).s; return `<tr><td>${esc(U(e.u).name)}</td><td><select aria-label="Status for ${esc(U(e.u).name)}" onchange="mark(${cid},'${d}',${e.u},this.value);toast('Saved')"><option value="">–</option>${[["P", "Present"], ["A", "Absent"], ["L", "Late"]].map(o => `<option value="${o[0]}" ${cur == o[0] ? "selected" : ""}>${o[1]}</option>`).join("")}</select></td><td>${attPct(e.u, cid)}%</td></tr>`; }).join("")}</table></div>`;
+            }
+        }
+        if (r == "ADMIN") {
+            if (p == "users")
+                return `<h2>Users</h2><div class="tbl"><table><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr>${DB.users.map(u => `<tr><td>${esc(u.name)}</td><td>${esc(u.email)}</td><td>${u.role}</td><td>${u.active ? "Active" : "Deactivated"}</td><td>${u.id == ME.id ? "" : `<button class="btn s o" onclick="U(${u.id}).active=1-U(${u.id}).active;log('Toggled user ${u.id}');save();render()">${u.active ? "Deactivate" : "Activate"}</button>`}</td></tr>`).join("")}</table></div>
+       <h3 style="margin-top:1rem">Create user</h3><form class="card" onsubmit="event.preventDefault();const f=this;sha('demo123').then(h=>{if(DB.users.some(u=>u.email==f.email.value))return toast('Email exists');DB.users.push({id:Math.max(...DB.users.map(u=>u.id))+1,name:f.name.value,email:f.email.value.toLowerCase(),role:f.role.value,pw:h,active:1,dept:'General'});log('User created');save();toast('User created (password: demo123)');render()})"><label for="nn">Name</label><input id="nn" name="name" required><label for="ne">Email</label><input id="ne" name="email" type="email" required><label for="nr">Role</label><select id="nr" name="role"><option>STUDENT</option><option>TEACHER</option><option>ADMIN</option></select><p><button class="btn">Create user</button></p></form>`;
+            if (p == "acourses")
+                return `<h2>Courses</h2><div class="tbl"><table><tr><th>Course</th><th>Teacher</th><th>Status</th><th></th></tr>${DB.courses.map(c => `<tr><td>${esc(c.title)}</td><td>${esc(U(c.teacher).name)}</td><td>${c.status}</td><td>${c.status == "pending" ? `<button class="btn s" onclick="C(${c.id}).status='published';C(${c.id}).pub=1;note(C(${c.id}).teacher,'Course approved: '+C(${c.id}).title);log('Approved course');save();render()">Approve</button> <button class="btn s o" onclick="C(${c.id}).status='rejected';save();render()">Reject</button>` : ""}</td></tr>`).join("")}</table></div>`;
+            if (p == "reports") {
+                const rows = DB.users.filter(u => u.role == "STUDENT").map(s => { const cs = myC(s.id); return [s.name, s.dept, cs.length, cs.length ? Math.round(cs.reduce((a, c) => a + pct(s.id, c), 0) / cs.length) : 0, attPct(s.id)]; });
+                return `<h2>Reports</h2><p><button class="btn s o" onclick='download("student-performance.csv",${esc(JSON.stringify([["Student", "Department", "Courses", "Avg progress %", "Attendance %"], ...rows])).replace(/'/g, "&#39;")})'>Export CSV</button> <button class="btn s o" onclick="print()">Print / PDF</button></p><div class="tbl"><table><tr><th>Student</th><th>Dept</th><th>Courses</th><th>Progress</th><th>Attendance</th></tr>${rows.map(r => `<tr>${r.map((x, i) => `<td>${esc(x)}${i == 3 || i == 4 ? "%" : ""}</td>`).join("")}</tr>`).join("")}</table></div>`;
+            }
+            if (p == "health") {
+                const sv = ["Application Server 1", "Application Server 2", "Application Server 3"];
+                return `<h2>System health</h2><div class="card"><h3>Load balancer (round-robin)</h3>${sv.map((s, i) => `<div class="row" style="justify-content:space-between;padding:.3rem 0"><span>${s}</span><span><span class="dot ${H[i] ? "" : "x"}"></span> ${H[i] ? "Online" : "Offline — skipped"} <button class="btn s o" onclick="H[${i}]=!H[${i}];render()">Simulate ${H[i] ? "failure" : "recovery"}</button></span></div>`).join("")}${["Database", "Redis", "Storage", "Load Balancer"].map(s => `<div class="row" style="justify-content:space-between;padding:.3rem 0"><span>${s}</span><span><span class="dot"></span> Healthy</span></div>`).join("")}<p>Active users: 1,245 · Requests/min: 3,820</p><p class="mut sm">Simulated routing: ${[1, 2, 3, 4].map(n => "Request " + n + " → " + route(n)).join(" · ")}</p></div>`;
+            }
+            if (p == "logs")
+                return `<h2>Activity logs</h2><div class="tbl"><table><tr><th>When</th><th>Who</th><th>Action</th></tr>${DB.logs.map(l => `<tr><td>${esc(l.at)}</td><td>${esc(l.who)}</td><td>${esc(l.m)}</td></tr>`).join("")}</table></div>`;
+        }
+        return empty("Page not found.");
+    }
+    const H = [true, true, true];
+    const route = n => { const up = [0, 1, 2].filter(i => H[i]); return up.length ? "Server " + (up[(n - 1) % up.length] + 1) : "503 (no healthy server)"; };
+    const NAV = { STUDENT: [["dash", "Dashboard"], ["browse", "Browse courses"], ["my", "My courses"], ["assign", "Assignments"], ["quizzes", "Quizzes"], ["grades", "Grades"], ["attend", "Attendance"], ["calendar", "Calendar"], ["certs", "Certificates"], ["notifs", "Notifications"], ["profile", "Profile"]], TEACHER: [["dash", "Dashboard"], ["tcourses", "Courses"], ["tassign", "Assignments"], ["tquiz", "Quiz builder"], ["tprog", "Student progress"], ["tatt", "Attendance"], ["notifs", "Announcements"], ["profile", "Profile"]], ADMIN: [["dash", "Dashboard"], ["users", "Users"], ["acourses", "Courses"], ["reports", "Reports"], ["health", "System health"], ["logs", "Activity logs"], ["notifs", "Announcements"], ["profile", "Profile"]] };
+    const PUB = ["", "courses", "course", "login", "register", "forgot", "verify", "about"];
+    const ROLEPAGES = { STUDENT: NAV.STUDENT.map(x => x[0]).concat(["learn", "quiz"]), TEACHER: NAV.TEACHER.map(x => x[0]), ADMIN: NAV.ADMIN.map(x => x[0]) };
+    function pubTop() { return `<header class="top"><a class="logo" href="#/">EduLearn</a><nav class="nav" aria-label="Main"><a href="#/courses">Courses</a><a href="#/about">About</a>${ME ? `<a class="btn s" href="#/dash">Open app</a>` : `<a href="#/login">Log in</a><a class="btn s" href="#/register">Sign up</a>`}</nav></header>`; }
+    function render() {
+        clearInterval(V);
+        const [p, a, b, c] = location.hash.replace(/^#\//, "").split("/"), app = document.getElementById("app");
+        let h = "";
+        if (!DB)
+            return;
+        if (PUB.includes(p || "")) {
+            let m = "";
+            if (!p)
+                m = `<section class="hero"><h1>Learn at your own pace. Teach with less admin.</h1><p>EduLearn brings courses, video lessons, assignments, quizzes, attendance and certificates into one place for students, teachers and administrators.</p><div class="row"><a class="btn" href="#/courses">Browse courses</a><a class="btn o" href="#/login">Try the demo</a></div></section><h2>Popular courses</h2><div class="grid">${DB.courses.filter(c => c.pub && c.status == "published").slice(0, 3).map(courseCard).join("")}</div>`;
+            else if (p == "courses")
+                m = "<h2>Courses</h2>" + catalog(decodeURIComponent(a || ""), b, c);
+            else if (p == "course")
+                m = courseDetail(+a);
+            else if (p == "about")
+                m = `<h2>About EduLearn</h2><p style="max-width:60ch">EduLearn is a role-based learning platform with three roles: Admin, Teacher and Student. This build runs fully in your browser with a local data layer so you can try every workflow; the same screens call a REST API when connected to the Node/PostgreSQL backend.</p>`;
+            else if (p == "login")
+                m = `<h2>Log in</h2><form class="card" style="max-width:420px" onsubmit="login(event)"><label for="e">Email</label><input id="e" name="email" type="email" required autocomplete="username"><label for="p">Password</label><input id="p" name="pw" type="password" required autocomplete="current-password"><p id="err" class="sm" style="color:var(--bad)" role="alert"></p><button class="btn">Log in</button> <a href="#/forgot" class="sm">Forgot password?</a><p class="sm mut">Demo (password demo123):</p><div class="row"><button type="button" class="btn s o" onclick="quick('ADMIN')">Admin</button><button type="button" class="btn s o" onclick="quick('TEACHER')">Teacher</button><button type="button" class="btn s o" onclick="quick('STUDENT')">Student</button></div></form>`;
+            else if (p == "register")
+                m = `<h2>Create account</h2><form class="card" style="max-width:420px" onsubmit="register(event)"><label for="n">Full name</label><input id="n" name="name" required><label for="e">Email</label><input id="e" name="email" type="email" required><label for="p">Password (8+ characters)</label><input id="p" name="pw" type="password" required><label for="d">Department</label><input id="d" name="dept" required><label for="r">I am a</label><select id="r" name="role"><option value="STUDENT">Student</option><option value="TEACHER">Teacher</option></select><p id="err" class="sm" style="color:var(--bad)" role="alert"></p><button class="btn">Create account</button></form>`;
+            else if (p == "forgot")
+                m = `<h2>Reset password</h2><form class="card" style="max-width:420px" onsubmit="event.preventDefault();toast('If that email exists, a reset link was sent.')"><label for="e">Email</label><input id="e" type="email" required><p><button class="btn">Send reset link</button></p></form>`;
+            else if (p == "verify") {
+                const x = DB.certs.find(z => z.id == a);
+                m = `<h2>Verify certificate</h2>${x ? `<div class="cert">${qr(x.id)}<h3>Valid certificate</h3><p>${esc(U(x.u).name)} completed ${esc(C(x.c).title)} on ${x.date}.</p><p>ID: ${esc(x.id)}</p></div>` : empty("No certificate found for ID " + esc(a || "") + ".")}<form class="row" style="margin-top:1rem" onsubmit="event.preventDefault();location.hash='#/verify/'+this.i.value"><input name="i" placeholder="EDU-2026-000123" aria-label="Certificate ID" style="max-width:260px"><button class="btn">Verify</button></form>`;
+            }
+            app.innerHTML = pubTop() + `<main class="wrap">${m}</main>`;
+            return;
+        }
+        if (!ME) {
+            location.hash = "#/login";
+            return;
+        }
+        if (!ROLEPAGES[ME.role].includes(p)) {
+            h = empty("You don't have access to this page.");
+        }
+        else
+            try {
+                h = page(p, a, b, c);
+            }
+            catch (e) {
+                console.error(e);
+                h = empty("Something went wrong loading this page.");
+            }
+        const un = DB.notes.filter(n => n.u == ME.id && !n.read).length;
+        app.innerHTML = `<header class="top"><div class="row"><button class="btn s o menu" aria-label="Toggle menu" onclick="document.querySelector('.side').classList.toggle('open')">Menu</button><a class="logo" href="#/">EduLearn</a></div><nav class="nav"><a class="bell" href="#/notifs" aria-label="Notifications, ${un} unread">Bell${un ? `<em>${un}</em>` : ""}</a><span class="sm mut">${esc(ME.name)} (${ME.role.toLowerCase()})</span><button class="btn s o" onclick="logout()">Log out</button></nav></header><div class="shell"><aside class="side" aria-label="Sidebar">${NAV[ME.role].map(n => `<a href="#/${n[0]}" class="${n[0] == p ? "on" : ""}" onclick="this.parentNode.classList.remove('open')">${n[1]}</a>`).join("")}</aside><main class="wrap" style="width:100%">${h}</main></div>`;
+    }
+    addEventListener("hashchange", () => { if (!(location.hash.startsWith("#/quiz/") || location.hash.startsWith("#/quizzes")) && Q && Q.t) {
+        clearInterval(Q.t);
+        Q = null;
+    } render(); scrollTo(0, 0); });
+    init();
+    
+  </script>
+</body>
+</html>
